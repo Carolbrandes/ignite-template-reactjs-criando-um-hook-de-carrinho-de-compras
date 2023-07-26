@@ -31,11 +31,6 @@ const Home = (): JSX.Element => {
     return newSumAmount;
   }, {} as CartItemsAmount);
 
-  const getCartItemAmount = (id: number) => {
-    const prod = cart.find((product) => product.id == id);
-    return prod ? prod.amount : 0;
-  };
-
   useEffect(() => {
     async function loadProducts() {
       const { data } = await api.get<Product[]>("/products");

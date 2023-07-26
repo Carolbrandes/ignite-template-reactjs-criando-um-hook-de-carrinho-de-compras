@@ -3,6 +3,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { toast } from "react-toastify";
@@ -43,6 +44,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
     return [];
   });
+
+  const prevCartRef = useRef<Product[]>();
 
   const updateStockAmount = async (
     productId: number,
@@ -152,8 +155,16 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   };
 
   useEffect(() => {
-    localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
-  }, [cart]);
+    prevCartRef.current = cart;
+  });
+
+  const prevCart = prevCartRef.current ?? cart;
+
+  useEffect(() => {
+    if (prevCart !== cart) {
+      localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
+    }
+  }, [cart, prevCart]);
 
   return (
     <CartContext.Provider
